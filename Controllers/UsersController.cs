@@ -16,7 +16,7 @@
             _userService = userService;
         }
 
-        // GET: api/Users
+        // GET: api/Users controller
         [HttpGet]
         public IActionResult GetUsers()
         {
