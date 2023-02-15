@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookStore.Properties.Models;
 
-namespace BookStore.Properties.Models
+namespace BookStore.DTO
 {
-    public class Booking
+    public class BookingDto
     {
         public int Id { get; set; }
 
@@ -14,14 +14,9 @@ namespace BookStore.Properties.Models
 
         public int UserId { get; set; }
 
-        public User User { get; set; }
-
         public int StatusId { get; set; }
-
-        public Status Status { get; set; }
 
         public int ProductId { get; set; }
 
-        public Product Product { get; set; }
     }
 }

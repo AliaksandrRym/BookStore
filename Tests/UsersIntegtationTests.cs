@@ -1,6 +1,7 @@
 ﻿namespace BookStore.Tests
 {
     using BookStore.Constants;
+    using BookStore.DTO;
     using BookStore.Properties.Models;
     using BookStore.Tests.TestData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,7 +14,7 @@
         public async Task Get_Users_Return_Ok()
         { 
             var response = await _client.GetAsync( Endpoints.User);
-            var users = await _client.GetFromJsonAsync<List<User>>(Endpoints.User);
+            var users = await _client.GetFromJsonAsync<List<UserDto>>(Endpoints.User);
             Assert.IsTrue(users.Any(), "Users List is empty");
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Users is not {HttpStatusCode.OK}");
          }
@@ -31,48 +32,29 @@
         }
 
         [TestMethod]
-        public async Task Post_User_Test()
+        public async Task Post_Delete_User_Test()
         {
-            var users = await _client.GetFromJsonAsync<List<User>>(Endpoints.User);
             var testUser = new TestUser();
-            User user = new User
+            UserDto user = new UserDto
             {
                 Name = testUser.Name,
                 Email = testUser.Email,
                 Password = testUser.Password,
-                Role_Id = testUser.Role_Id,
+                RoleId = testUser.RoleId,
                 Login = testUser.Login,
                 Adress = testUser.Adress,
-                Role = null,
-                Bookings= null,
             };
             HttpResponseMessage response = await _client.PostAsJsonAsync(Endpoints.User, user);
+
+            var users = await _client.GetFromJsonAsync<List<SecureUserDto>>(Endpoints.User);
+            var id = users.Where(u => u.Name == testUser.Name).First().Id;
+
+            var usersFromServer = await _client.GetFromJsonAsync<List<SecureUserDto>>(Endpoints.User);
+            var userToDeleteId = usersFromServer.Where(u => u.Name ==user.Name).FirstOrDefault().Id;
+            var deleteResponse = await _client.DeleteAsync(Endpoints.User + "/" + id);
 
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode, $"Status code for POST api/Users is not {HttpStatusCode.OK}");
-        }
-
-
-        [TestMethod]
-        public async Task Delete_User_ById_Test()
-        {
-            var testUser = new TestUser();
-            User user = new User
-            {
-                Name = testUser.Name,
-                Email = testUser.Email,
-                Password = testUser.Password,
-                Role_Id = testUser.Role_Id,
-                Login = testUser.Login,
-                Adress = testUser.Adress,
-                Role = null,
-                Bookings = null,
-            };
-            HttpResponseMessage response = await _client.PostAsJsonAsync(Endpoints.User, user);
-            var users = await _client.GetFromJsonAsync<List<User>>(Endpoints.User);
-            var id = users.Where(u => u.Name == testUser.Name).First().Id;
-            var deleteResponse = await _client.DeleteAsync(Endpoints.User +"/" + id);
-
-            Assert.AreEqual(HttpStatusCode.OK, deleteResponse.StatusCode, $"Status code for Delete api/Users {id} is not {HttpStatusCode.OK}");
+            Assert.AreEqual(HttpStatusCode.NoContent, deleteResponse.StatusCode, $"Status code for Delete api/Users {id} is not {HttpStatusCode.OK}");
         }
     }
 }

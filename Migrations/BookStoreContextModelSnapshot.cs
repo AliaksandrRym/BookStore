@@ -39,13 +39,6 @@ namespace BookStore.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Product_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Product_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Sold")
                         .HasColumnType("int");
 
@@ -65,6 +58,7 @@ namespace BookStore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Delivery_Adress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Delivery_Time")
@@ -76,19 +70,10 @@ namespace BookStore.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Product_Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status_Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("User_Id")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -193,15 +178,12 @@ namespace BookStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Roleid")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Roleid");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("User");
                 });
@@ -248,7 +230,9 @@ namespace BookStore.Migrations
                 {
                     b.HasOne("BookStore.Properties.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("Roleid");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Role");
                 });

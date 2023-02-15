@@ -1,6 +1,6 @@
-﻿namespace BookStore.Properties.Models
+﻿namespace BookStore.DTO
 {
-    public class BookStoreItem
+    public class BookStoreItemDto
     {
         public int Id { get; set; }
 
@@ -11,7 +11,5 @@
         public int Sold { get; set; }
 
         public int ProductId { get; set; }
-
-        public Product Product { get; set; }    
     }
 }

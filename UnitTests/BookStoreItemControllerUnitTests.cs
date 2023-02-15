@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using BookStore.Controllers;
+    using BookStore.DTO;
     using BookStore.Interfaces;
     using BookStore.Properties.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -22,10 +23,9 @@
         [TestMethod]
         public void Get_BookstoreItems_Return_Ok()
         {
-            var itemsList = _fixture.CreateMany<BookStoreItem>(3).ToList();
-
-            _bookStoreServiceMock.Setup(p => p.Get()).Returns(itemsList);
-            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object);
+            var storeList = _fixture.CreateMany<BookStoreItem>(3).ToList();
+            _bookStoreServiceMock.Setup(store => store.Get()).Returns(storeList);
+            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object, _mapper);
 
             var result = _bookStoreController.GetBookStoreItems();
             var obj = result as ObjectResult;
@@ -36,13 +36,14 @@
         [TestMethod]
         public void Get_BookStoreItem_ById_Return_Ok()
         {
-            var item = _fixture.Create<BookStoreItem>();
-            var itemId = item.Id;
+            var store = _fixture.Create<BookStoreItem>();
+            var storeId = store.Id;
 
-            _bookStoreServiceMock.Setup(i => i.Get(itemId)).Returns(item);
-            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object);
+            _bookStoreServiceMock.Setup(u => u.Get(storeId)).Returns(store);
+            _bookStoreServiceMock.Setup(servise => servise.Exists(store.Id)).Returns(true);
+            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object, _mapper);
 
-            var result = _bookStoreController.GetBookStoreItem(itemId);
+            var result = _bookStoreController.GetBookStoreItem(storeId);
             var obj = result as ObjectResult;
 
             Assert.AreEqual(200, obj.StatusCode);
@@ -51,12 +52,12 @@
         [TestMethod]
         public void Post_BookStoreItem_Return_Ok()
         {
-            var item = _fixture.Create<BookStoreItem>();
+            var store = _mapper.Map<BookStoreItemDto>(_fixture.Create<BookStoreItem>());
 
-            _bookStoreServiceMock.Setup(service => service.Post(It.IsAny<BookStoreItem>())).Returns(item);
-            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object);
+            _bookStoreServiceMock.Setup(service => service.Post(It.IsAny<BookStoreItem>())).Returns(true);
+            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object, _mapper);
 
-            var result = _bookStoreController.PostBookStoreItem(item);
+            var result = _bookStoreController.PostBookStoreItem(store);
             var obj = result as ObjectResult;
 
             Assert.AreEqual(201, obj.StatusCode);
@@ -65,27 +66,31 @@
         [TestMethod]
         public void Put_BookStoreItem_Return_Ok()
         {
-            var item = _fixture.Create<BookStoreItem>();
+            var store = _fixture.Create<BookStoreItem>();
+            _bookStoreServiceMock.Setup(servise => servise.Put(It.IsAny<BookStoreItem>())).Returns(true);
+            _bookStoreServiceMock.Setup(servise => servise.Exists(store.Id)).Returns(true);
+            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object, _mapper);
+            var updStore = _mapper.Map<BookStoreItemDto>(store);
 
-            _bookStoreServiceMock.Setup(servise => servise.Put(It.IsAny<BookStoreItem>())).Returns(item);
-            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object);
-
-            var result = _bookStoreController.PutBookStoreItem(item.Id, item);
+            var result = _bookStoreController.PutBookStoreItem(store.Id, updStore);
             var obj = result as ObjectResult;
 
-            Assert.AreEqual(200, obj.StatusCode);
+            Assert.AreEqual(204, obj.StatusCode);
         }
 
         [TestMethod]
         public void Delete_BookStoreItem_Return_Ok()
         {
-            _bookStoreServiceMock.Setup(service => service.Delete(It.IsAny<int>())).Returns(true);
-            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object);
+            var store = _fixture.Create<BookStoreItem>();
+            var id = store.Id;
+            _bookStoreServiceMock.Setup(servise => servise.Exists(id)).Returns(true);
+            _bookStoreServiceMock.Setup(service => service.Delete(It.IsAny<BookStoreItem>())).Returns(true);
+            _bookStoreController = new BookStoreItemsController(_bookStoreServiceMock.Object, _mapper);
 
-            var result = _bookStoreController.DeleteBookStoreItem(It.IsAny<int>());
+            var result = _bookStoreController.DeleteBookStoreItem(id);
             var obj = result as ObjectResult;
 
-            Assert.AreEqual(200, obj.StatusCode);
+            Assert.AreEqual(204, obj.StatusCode);
         }
     }
 }

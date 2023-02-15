@@ -1,6 +1,6 @@
 ﻿namespace BookStore.Constants
 {
-    public class Endpoints
+    public static class Endpoints
     {
         public const string User = "api/Users";
 

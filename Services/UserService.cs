@@ -1,13 +1,9 @@
-﻿
-using BookStore.Data;
-using BookStore.Interfaces;
-using BookStore.Properties.Models;
-using Castle.Core.Resource;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace BookStore.Services
+﻿namespace BookStore.Services
 {
+    using BookStore.Data;
+    using BookStore.Interfaces;
+    using BookStore.Properties.Models;
+
     public class UserService : IUserService
     {
         private readonly BookStoreContext _dbContext;
@@ -17,14 +13,10 @@ namespace BookStore.Services
             _dbContext = context;
         }
 
-        public bool Delete(int id)
+        public bool Delete(User model)
         {
-            var user = _dbContext.User.Find(id);
-            _dbContext.User.Remove(user);
-            var role = _dbContext.Role.Find(user.Role_Id);
-            role.Users.Remove(user);
-            _dbContext.SaveChanges();
-            return true;
+            _dbContext.Remove(model);
+            return Save();
         }
 
         public List<User> Get()
@@ -35,29 +27,31 @@ namespace BookStore.Services
 
         public User Get(int id)
         {
-            var result = _dbContext.User.Find(id);
+            var result = _dbContext.User.Where(u => u.Id == id).FirstOrDefault();
             return result;
         }
 
-        public User Post(User model)
+        public bool Post(User model)
         {
-            var role = _dbContext.Role.Find(model.Role_Id);
-            role.Users.Add(model);
-            _dbContext.User.AddAsync(model);
-            _dbContext.SaveChangesAsync();
-            return model;
+            _dbContext.Add(model);
+            return Save();
         }
 
-        public User Put(User model)
+        public bool Put(User model)
         {
-            var user = _dbContext.User.Where(u => u.Id == model.Id).FirstOrDefault();
-            user.Adress = model.Adress;
-            user.Login = model.Login;
-            user.Email = model.Email;
-            user.Name= model.Name;
-            user.Role_Id = model.Role_Id;
-            _dbContext.SaveChangesAsync();
-            return model;
+            _dbContext.Update(model);
+            return Save();
+        }
+
+        public bool Exists(int id)
+        {
+            return _dbContext.User.Any(u => u.Id == id);
+        }
+
+        public bool Save()
+        {
+            var saved = _dbContext.SaveChanges();
+            return saved > 0 ? true: false;
         }
     }
 }

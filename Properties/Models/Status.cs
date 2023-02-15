@@ -6,11 +6,6 @@
 
         public string Name { get; set; }
 
-        public List<Booking>? Bookings { get; set; }
-
-        public Status() 
-        {
-            Bookings = new List<Booking>();
-        }
+        public ICollection<Booking> Bookings { get; set; }
     }
 }

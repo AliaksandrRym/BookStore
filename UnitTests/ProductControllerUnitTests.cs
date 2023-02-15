@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using BookStore.Controllers;
+    using BookStore.DTO;
     using BookStore.Interfaces;
     using BookStore.Properties.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@
             var productList = _fixture.CreateMany<Product>(3).ToList();
 
             _productServiceMock.Setup(p => p.Get()).Returns(productList);
-            _productController = new ProductsController(_productServiceMock.Object);
+            _productController = new ProductsController(_productServiceMock.Object, _mapper);
 
             var result =  _productController.GetProducts();
             var obj = result as ObjectResult;
@@ -40,7 +41,8 @@
             var productId = product.Id;
 
             _productServiceMock.Setup(u => u.Get(productId)).Returns(product);
-            _productController = new ProductsController(_productServiceMock.Object);
+            _productServiceMock.Setup(servise => servise.Exists(productId)).Returns(true);
+            _productController = new ProductsController(_productServiceMock.Object, _mapper);
 
             var result = _productController.GetProduct(productId);
             var obj = result as ObjectResult;
@@ -51,12 +53,12 @@
         [TestMethod]
         public void Post_Product_Return_Ok()
         {
-            var product = _fixture.Create<Product>();
+            var product = _mapper.Map<ProductDto>(_fixture.Create<Product>());
 
-            _productServiceMock.Setup(service => service.Post(It.IsAny<Product>())).Returns(product);
-            _productController = new ProductsController(_productServiceMock.Object);
+            _productServiceMock.Setup(service => service.Post(It.IsAny<Product>())).Returns(true);
+            _productController = new ProductsController(_productServiceMock.Object, _mapper);
 
-            var result =  _productController.PostProduct(product);
+            var result = _productController.PostProduct(product);
             var obj = result as ObjectResult;
 
             Assert.AreEqual(201, obj.StatusCode);
@@ -67,26 +69,30 @@
         {
             var product = _fixture.Create<Product>();
 
-            _productServiceMock.Setup(servise => servise.Put(It.IsAny<Product>())).Returns(product);
-            _productController = new ProductsController(_productServiceMock.Object); 
+            _productServiceMock.Setup(servise => servise.Put(It.IsAny<Product>())).Returns(true);
+            _productServiceMock.Setup(servise => servise.Exists(product.Id)).Returns(true);
+            _productController = new ProductsController(_productServiceMock.Object, _mapper);
+            var updProduct = _mapper.Map<ProductDto>(product);
 
-
-            var result = _productController.PutProduct(product.Id, product);
+            var result = _productController.PutProduct(product.Id, updProduct);
             var obj = result as ObjectResult;
 
-            Assert.AreEqual(200, obj.StatusCode);
+            Assert.AreEqual(204, obj.StatusCode);
         }
 
         [TestMethod]
         public void Delete_Product_Return_Ok()
         {
-            _productServiceMock.Setup(service => service.Delete(It.IsAny<int>())).Returns(true);
-            _productController = new ProductsController(_productServiceMock.Object);
+            var product = _fixture.Create<Product>();
+            var id = product.Id;
+            _productServiceMock.Setup(servise => servise.Exists(id)).Returns(true);
+            _productServiceMock.Setup(service => service.Delete(It.IsAny<Product>())).Returns(true);
+            _productController = new ProductsController(_productServiceMock.Object, _mapper);
 
-            var result = _productController.DeleteProduct(It.IsAny<int>());
+            var result = _productController.DeleteProduct(id);
             var obj = result as ObjectResult;
 
-            Assert.AreEqual(200, obj.StatusCode);
+            Assert.AreEqual(204, obj.StatusCode);
         }
     }
 }

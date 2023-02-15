@@ -2,16 +2,18 @@
 
 namespace BookStore.Interfaces
 {
-    public interface IBookingService
+    public interface IBookingService: IBaseService
     {
         List<Booking> Get();
 
         Booking Get(int id);
 
-        Booking Post(Booking model);
+        bool Post(Booking model);
 
-        Booking Put(Booking model);
+        bool Put(Booking model);
 
-        bool Delete(int id);
-    }
+        bool Delete(Booking model);
+
+        bool Save();
+    }   
 }

@@ -1,7 +1,6 @@
-﻿namespace BookStore.Properties.Models
+﻿namespace BookStore.DTO
 {
-    using System.ComponentModel.DataAnnotations;
-    public class User
+    public class UserDto
     {
         public int Id { get; set; }
 
@@ -16,11 +15,5 @@
         public string Password { get; set; }
 
         public int RoleId { get; set; }
-
-        // Navigation properties  
-
-        public Role Role { get; set; }
-
-        public ICollection<Booking>? Bookings {get; set;}  
     }
 }

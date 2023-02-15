@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore.Mvc;
     using BookStore.Properties.Models;
     using BookStore.Interfaces;
+    using AutoMapper;
+    using BookStore.DTO;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -10,98 +12,121 @@
     {
         private readonly IBookStoreService _bookstoreService;
 
-        public BookStoreItemsController(IBookStoreService bookStoreService)
+        private readonly IMapper _mapper;
+
+        public BookStoreItemsController(IBookStoreService bookStoreService, IMapper mapper)
         {
             _bookstoreService = bookStoreService;
+            _mapper = mapper;
         }
 
         // GET: api/BookStoreItems
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
         public IActionResult GetBookStoreItems()
         {
-            try
-            {
-                var result = _bookstoreService.Get();
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message); ;
-            }
+            var result = _mapper.Map<List<BookStoreItem>>(_bookstoreService.Get());
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return StatusCode(200, result);
         }
 
         // GET: api/BookStoreItems/5
         [HttpGet("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200, Type = typeof(BookStoreItem))]
         public  IActionResult GetBookStoreItem(int id)
         {
-            var product = _bookstoreService.Get(id);
-
-            if (product == null)
-            {
+            if (!_bookstoreService.Exists(id))
                 return NotFound();
-            }
 
-            return StatusCode(200, product);
+            var store = _mapper.Map<BookStoreItemDto>(_bookstoreService.Get(id));
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return StatusCode(200, store);
         }
 
         // PUT: api/BookStoreItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutBookStoreItem(int id, BookStoreItem bookStoreItem)
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        public IActionResult PutBookStoreItem(int id, BookStoreItemDto updatedStore)
         {
-            if (id != bookStoreItem.Id)
+            if (updatedStore == null)
+                return BadRequest(ModelState);
+
+            if (id != updatedStore.Id)
+                return BadRequest(ModelState);
+
+            if (!_bookstoreService.Exists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var storeMap = _mapper.Map<BookStoreItem>(updatedStore);
+
+            if (!_bookstoreService.Put(storeMap))
             {
-                return BadRequest();
+                ModelState.AddModelError("", "Something went wrong while updating BookStore");
+                return StatusCode(500, ModelState);
             }
-            try
-            {
-                var result = _bookstoreService.Put(bookStoreItem);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return StatusCode(204, "Book Store was updated");
         }
 
         // POST: api/BookStoreItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [ProducesResponseType(201)]
         [HttpPost]
-        public IActionResult PostBookStoreItem(BookStoreItem bookStoreItem)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public IActionResult PostBookStoreItem(BookStoreItemDto createStore)
         {
-            try
+            if (createStore == null)
+                return BadRequest(ModelState);
+
+            var store = _mapper.Map<List<BookStoreItemDto>>(_bookstoreService.Get()).Where(b => b.Id == createStore.Id).FirstOrDefault();
+
+            if (store != null)
             {
-                if (ModelState.IsValid)
-                {
-                    var result = _bookstoreService.Post(bookStoreItem);
-                    return StatusCode(201, result);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                ModelState.AddModelError("", "Store with same Id exists");
+                return StatusCode(422, ModelState);
             }
-            catch (Exception ex)
+
+            var storeMap = _mapper.Map<BookStoreItem>(createStore);
+            if (!_bookstoreService.Post(storeMap))
             {
-                return BadRequest(ex);
+                ModelState.AddModelError("", "Something went wrong, Store item was not saved");
+                return StatusCode(500, ModelState);
             }
+            return StatusCode(201, "Store was created");
         }
 
         // DELETE: api/BookStoreItems/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult DeleteBookStoreItem(int id)
         {
-            try
-            {
-                var result = _bookstoreService.Delete(id);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
+            if (!_bookstoreService.Exists(id))
+                return NotFound();
 
-                return NotFound(ex);
+            var storeToDelete = _bookstoreService.Get(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_bookstoreService.Delete(storeToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting store item");
             }
+
+            return StatusCode(204, "Store was deleted");
         }
     }
 }
