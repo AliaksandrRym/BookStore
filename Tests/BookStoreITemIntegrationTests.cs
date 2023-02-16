@@ -27,7 +27,6 @@
             var bookStoreItem = await _client.GetFromJsonAsync<BookStoreItem>(Endpoints.BookStoreItems + "/" + bookStoreItemFromList.Id);
             var response = await _client.GetAsync(Endpoints.BookStoreItems + "/" + bookStoreItemFromList.Id);
 
-            Assert.AreEqual(bookStoreItemFromList.Product_Name, bookStoreItem.Product_Name);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET {Endpoints.BookStoreItems}/{bookStoreItemFromList.Id} is not {HttpStatusCode.OK}");
         }
     }

@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore.Mvc;
     using BookStore.Properties.Models;
     using BookStore.Interfaces;
+    using AutoMapper;
+    using BookStore.DTO;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -10,99 +12,122 @@
     {
         private readonly IProductService _productService;
 
+        private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService)
+
+        public ProductsController(IProductService productService, IMapper mapper)
         {
             _productService = productService;
+            _mapper = mapper;
         }
 
         // GET: api/Products
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
         public IActionResult GetProducts()
         {
-            try
-            {
-                var result = _productService.Get();
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message); ;
-            }
+            var result = _mapper.Map<List<ProductDto>>(_productService.Get());
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return StatusCode(200, result);
         }
 
         //// GET: api/Products/5
         [HttpGet("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200, Type = typeof(Product))]
         public IActionResult GetProduct(int id)
         {
-            var product = _productService.Get(id);
-
-            if (product == null)
-            {
+            if (!_productService.Exists(id))
                 return NotFound();
-            }
+
+            var product = _mapper.Map<ProductDto>(_productService.Get(id));
+
+            if (!ModelState.IsValid)
+                return BadRequest();
 
             return StatusCode(200, product);
         }
 
         //// PUT: api/Products/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutProduct(int id, Product product)
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        public IActionResult PutProduct(int id, ProductDto updatedProduct)
         {
-            if (id != product.Id)
+            if (updatedProduct == null)
+                return BadRequest(ModelState);
+
+            if (id != updatedProduct.Id)
+                return BadRequest(ModelState);
+
+            if (!_productService.Exists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var productMap = _mapper.Map<Product>(updatedProduct);
+
+            if (!_productService.Put(productMap))
             {
-                return BadRequest();
+                ModelState.AddModelError("", "Something went wrong while Product updating");
+                return StatusCode(500, ModelState);
             }
-            try
-            {
-                var result = _productService.Put(product);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            return StatusCode(204, "Product was updated");
         }
 
         // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [ProducesResponseType(201)]
         [HttpPost]
-        public IActionResult PostProduct(Product product)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public IActionResult PostProduct(ProductDto createProduct)
         {
-            try
+            if (createProduct == null)
+                return BadRequest(ModelState);
+
+            var product = _mapper.Map<List<ProductDto>>(_productService.Get())
+                .Where(p => p.Name == createProduct.Name).FirstOrDefault();
+
+            if (product != null)
             {
-                if (ModelState.IsValid)
-                {
-                    var result = _productService.Post(product);
-                    return StatusCode(201, result);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                ModelState.AddModelError("", "Product with same Name exists");
+                return StatusCode(422, ModelState);
             }
-            catch (Exception ex)
+
+            var productMap = _mapper.Map<Product>(createProduct);
+            if (!_productService.Post(productMap))
             {
-                return BadRequest(ex);
+                ModelState.AddModelError("", "Something went wrong, product was not saved");
+                return StatusCode(500, ModelState);
             }
+            return StatusCode(201, "Product was created");
         }
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult DeleteProduct(int id)
         {
-            try
-            {
-                var result = _productService.Delete(id);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
+            if (!_productService.Exists(id))
+                return NotFound();
 
-                return NotFound(ex);
+            var productToDelete = _productService.Get(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_productService.Delete(productToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting product");
             }
+
+            return StatusCode(204, "Product was deleted");
         }
     }
 }

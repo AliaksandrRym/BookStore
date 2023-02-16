@@ -2,16 +2,16 @@
 {
     using BookStore.Properties.Models;
 
-    public interface IBookStoreService
+    public interface IBookStoreService: IBaseService
     {
         List<BookStoreItem> Get();
 
         BookStoreItem Get(int id);
 
-        BookStoreItem Post(BookStoreItem model);
+        bool Post(BookStoreItem model);
 
-        BookStoreItem Put(BookStoreItem model);
+        bool Put(BookStoreItem model);
 
-        bool Delete(int id);
+        bool Delete(BookStoreItem model);
     }
 }

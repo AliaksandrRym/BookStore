@@ -3,6 +3,8 @@
     using Microsoft.AspNetCore.Mvc;
     using BookStore.Properties.Models;
     using BookStore.Interfaces;
+    using AutoMapper;
+    using BookStore.DTO;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -10,100 +12,120 @@
     {
         private readonly IUserService _userService;
 
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
-        // GET: api/Users controller
+        // GET: api/Users 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
         public IActionResult GetUsers()
-        {
-            try
-            {
-                var result = _userService.Get();
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message); 
-            }
+        {               
+            var result = _mapper.Map<List<SecureUserDto>>(_userService.Get());
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+                return StatusCode(200, result);            
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200, Type = typeof(User))]
         public IActionResult GetUser(int id)
         {
-            var user = _userService.Get(id);
-
-            if (user == null)
-            {
+            if (!_userService.Exists(id))
                 return NotFound();
-            }
 
-            return StatusCode(200, user); 
+                var user = _mapper.Map<SecureUserDto>(_userService.Get(id));
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return StatusCode(200, user);
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutUser(int id, User user)
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        public IActionResult PutUser(int id, UserDto updatedUser)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-            try
-            {
-                var result = _userService.Put( user);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            if (updatedUser == null)
+                return BadRequest(ModelState);
 
+            if (id != updatedUser.Id)
+                return BadRequest(ModelState);
+
+            if (!_userService.Exists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userMap = _mapper.Map<User>(updatedUser);
+
+            if (!_userService.Put(userMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating user");
+                return StatusCode(500, ModelState);
+            }
+            return StatusCode(204, "User was updated");
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [ProducesResponseType(201)]
         [HttpPost]
-        public IActionResult PostUser(User user)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public IActionResult PostUser(UserDto createUser)
         {
-            try
+            if(createUser == null)
+                return BadRequest(ModelState);
+
+            var user = _mapper.Map<List<UserDto>>(_userService.Get()).Where(u => u.Email == createUser.Email).FirstOrDefault();
+
+            if(user != null)
             {
-                if (ModelState.IsValid)
-                {
-                    var result = _userService.Post(user);
-                    return StatusCode(201, result);
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                ModelState.AddModelError("", "User with same Email exists");
+                return StatusCode(422, ModelState);
             }
-            catch (Exception ex)
+
+            var userMap = _mapper.Map<User>(createUser);
+            if(!_userService.Post(userMap))
             {
-                return BadRequest(ex);
+                ModelState.AddModelError("", "Something went wrong, user was not saved");
+                return StatusCode(500, ModelState);
             }
+            return StatusCode(201, "User was created");
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult DeleteUser(int id)
         {
-            try
-            {
-                var result = _userService.Delete(id);
-                return StatusCode(200, result);
-            }
-            catch (Exception ex)
-            {
+            if(!_userService.Exists(id))
+                return NotFound();
 
-                return NotFound(ex);
+            var userToDelete = _userService.Get(id);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);  
+
+            if(!_userService.Delete(userToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting user");
             }
+
+            return StatusCode(204, "User was deleted");
         }
     }
 }

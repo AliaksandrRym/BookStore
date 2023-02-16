@@ -2,8 +2,6 @@
 {
     public class TestUser
     {
-        public int Id = 10;
-
         public string Name = "TestUser";
 
         public string Email = "TestMail";
@@ -14,6 +12,6 @@
 
         public string Adress = "Test Adress";
 
-        public int Role_Id = 1;
+        public int RoleId = 1;
     }
 }

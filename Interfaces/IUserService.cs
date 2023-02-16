@@ -1,19 +1,16 @@
 ﻿using BookStore.Properties.Models;
-using Microsoft.AspNetCore.Mvc;
-
 namespace BookStore.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IBaseService
     {
         List<User> Get();
 
         User Get(int id);
 
-        User Post(User model);
+        bool Post(User model);
 
-        User Put(User model);
+        bool Put(User model);
 
-        bool Delete(int id);
-
+        bool Delete(User model);
     }
 }

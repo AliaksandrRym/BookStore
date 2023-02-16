@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookStore.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialNewMigr : Migration
+    public partial class InitMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,19 +60,17 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(name: "Product_Name", type: "nvarchar(max)", nullable: false),
                     Available = table.Column<int>(type: "int", nullable: false),
                     Booked = table.Column<int>(type: "int", nullable: false),
                     Sold = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(name: "Product_Id", type: "int", nullable: false),
-                    ProductId0 = table.Column<int>(name: "ProductId", type: "int", nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookStore", x => x.Id);
                     table.ForeignKey(
                         name: "FK_BookStore_Product_ProductId",
-                        column: x => x.ProductId0,
+                        column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -89,17 +87,17 @@ namespace BookStore.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<int>(name: "Role_Id", type: "int", nullable: false),
-                    Roleid = table.Column<int>(type: "int", nullable: true)
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Role_Roleid",
-                        column: x => x.Roleid,
+                        name: "FK_User_Role_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Role",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,34 +106,31 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryAdress = table.Column<string>(name: "Delivery_Adress", type: "nvarchar(max)", nullable: true),
+                    DeliveryAdress = table.Column<string>(name: "Delivery_Adress", type: "nvarchar(max)", nullable: false),
                     Deliverydate = table.Column<DateTime>(name: "Delivery_date", type: "datetime2", nullable: false),
                     DeliveryTime = table.Column<DateTime>(name: "Delivery_Time", type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(name: "User_Id", type: "int", nullable: false),
-                    StatusId = table.Column<int>(name: "Status_Id", type: "int", nullable: false),
-                    ProductId = table.Column<int>(name: "Product_Id", type: "int", nullable: false),
-                    UserId0 = table.Column<int>(name: "UserId", type: "int", nullable: false),
-                    StatusId0 = table.Column<int>(name: "StatusId", type: "int", nullable: false),
-                    ProductId0 = table.Column<int>(name: "ProductId", type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Booking", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Booking_Product_ProductId",
-                        column: x => x.ProductId0,
+                        column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Booking_Status_StatusId",
-                        column: x => x.StatusId0,
+                        column: x => x.StatusId,
                         principalTable: "Status",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Booking_User_UserId",
-                        column: x => x.UserId0,
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -162,9 +157,9 @@ namespace BookStore.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Roleid",
+                name: "IX_User_RoleId",
                 table: "User",
-                column: "Roleid");
+                column: "RoleId");
         }
 
         /// <inheritdoc />

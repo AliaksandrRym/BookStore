@@ -2,16 +2,16 @@
 
 namespace BookStore.Interfaces
 {
-    public interface IProductService
+    public interface IProductService: IBaseService
     {
         List<Product> Get();
 
         Product Get(int id);
 
-        Product Post(Product model);
+        bool Post(Product model);
 
-        Product Put(Product model);
+        bool Put(Product model);
 
-        bool Delete(int id);
+        bool Delete(Product model);
     }
 }

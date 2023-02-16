@@ -1,6 +1,6 @@
-﻿namespace BookStore.Properties.Models
+﻿namespace BookStore.DTO
 {
-    public class Product
+    public class ProductDto
     {
         public int Id { get; set; }
 
@@ -13,11 +13,5 @@
         public float Price { get; set; }
 
         public string? Image_Path { get; set; }
-
-        //Navigation properties
-
-        public ICollection<Booking>? Bookings { get; set; }
-
-        public ICollection<BookStoreItem> BookStoreItems { get; set; }
     }
 }

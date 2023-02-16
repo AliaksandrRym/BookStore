@@ -1,9 +1,9 @@
-﻿using BookStore.Data;
-using BookStore.Interfaces;
-using BookStore.Properties.Models;
-
-namespace BookStore.Services
+﻿namespace BookStore.Services
 {
+    using BookStore.Data;
+    using BookStore.Interfaces;
+    using BookStore.Properties.Models;
+
     public class ProductService : IProductService
     {
         private readonly BookStoreContext _dbContext;
@@ -12,12 +12,15 @@ namespace BookStore.Services
         {
             _dbContext = context;
         }
-        public bool Delete(int id)
+        public bool Delete(Product model)
         {
-            var product = _dbContext.Product.Find(id);
-            _dbContext.Product.Remove(product);
-            _dbContext.SaveChanges();
-            return true;
+            _dbContext.Remove(model);
+            return Save();
+        }
+
+        public bool Exists(int id)
+        {
+            return _dbContext.Product.Any(u => u.Id == id);
         }
 
         public List<Product> Get()
@@ -28,27 +31,26 @@ namespace BookStore.Services
 
         public Product Get(int id)
         {
-            var result = _dbContext.Product.Find(id);
+            var result = _dbContext.Product.Where(p => p.Id == id).FirstOrDefault();
             return result;
         }
 
-        public Product Post(Product model)
+        public bool Post(Product model)
         {
-            _dbContext.Product.Add(model);
-            _dbContext.SaveChanges();
-            return model;
+            _dbContext.Add(model);
+            return Save();
         }
 
-        public Product Put(Product model)
+        public bool Put(Product model)
         {
-            var product = _dbContext.Product.Where(u => u.Id == model.Id).FirstOrDefault();
-            product.Author = model.Author;
-            product.Description = model.Description;
-            product.Price = model.Price;
-            product.Image_Path = model.Image_Path;
-            product.Name = model.Name;
-            _dbContext.SaveChangesAsync();
-            return model;
+            _dbContext.Update(model);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _dbContext.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Properties.Models;
+using System.Diagnostics;
 
 namespace BookStore.Data
 {
@@ -25,5 +26,6 @@ namespace BookStore.Data
         public DbSet<BookStore.Properties.Models.BookStoreItem> BookStore { get; set; } = default!;
 
         public DbSet<BookStore.Properties.Models.Status> Status { get; set; } = default!;
+
     }
 }
