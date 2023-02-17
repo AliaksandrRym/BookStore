@@ -1,6 +1,6 @@
 ﻿namespace BookStore.Interfaces
 {
-    using BookStore.Properties.Models;
+    using BookStore.Models;
 
     public interface IBookStoreService: IBaseService
     {

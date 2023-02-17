@@ -1,4 +1,5 @@
-﻿using BookStore.Properties.Models;
+﻿using BookStore.Models;
+
 namespace BookStore.Interfaces
 {
     public interface IUserService : IBaseService

@@ -2,7 +2,7 @@
 {
     using BookStore.Constants;
     using BookStore.DTO;
-    using BookStore.Properties.Models;
+    using BookStore.Models;
     using BookStore.Tests.TestData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;

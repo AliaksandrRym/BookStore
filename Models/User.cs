@@ -1,6 +1,7 @@
-﻿namespace BookStore.Properties.Models
+﻿namespace BookStore.Models
 {
     using System.ComponentModel.DataAnnotations;
+
     public class User
     {
         public int Id { get; set; }
@@ -21,6 +22,6 @@
 
         public Role Role { get; set; }
 
-        public ICollection<Booking>? Bookings {get; set;}  
+        public ICollection<Booking>? Bookings { get; set; }
     }
 }

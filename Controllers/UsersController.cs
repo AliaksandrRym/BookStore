@@ -1,10 +1,10 @@
 ﻿namespace BookStore.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using BookStore.Properties.Models;
     using BookStore.Interfaces;
     using AutoMapper;
     using BookStore.DTO;
+    using BookStore.Models;
 
     [Route("api/[controller]")]
     [ApiController]

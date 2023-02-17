@@ -1,14 +1,14 @@
 ﻿
 namespace BookStore.UnitTests
 {
-using AutoFixture;
-using BookStore.Controllers;
-using BookStore.DTO;
-using BookStore.Interfaces;
-using BookStore.Properties.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+    using AutoFixture;
+    using BookStore.Controllers;
+    using BookStore.DTO;
+    using BookStore.Interfaces;
+    using BookStore.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
 
     [TestClass]
     public class UserControllerUnitTests: BaseTests
