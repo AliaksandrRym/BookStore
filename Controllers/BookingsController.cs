@@ -2,9 +2,9 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using BookStore.Interfaces;
-    using BookStore.Properties.Models;
     using BookStore.DTO;
     using AutoMapper;
+    using BookStore.Models;
 
     [Route("api/[controller]")]
     [ApiController]

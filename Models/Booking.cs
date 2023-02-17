@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStore.Properties.Models
+namespace BookStore.Models
 {
     public class Booking
     {

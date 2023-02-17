@@ -2,7 +2,7 @@
 {
     using AutoMapper;
     using BookStore.DTO;
-    using BookStore.Properties.Models;
+    using BookStore.Models;
 
     public class MappingProfiles: Profile
     {

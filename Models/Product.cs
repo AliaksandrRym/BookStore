@@ -1,4 +1,4 @@
-﻿namespace BookStore.Properties.Models
+﻿namespace BookStore.Models
 {
     public class Product
     {

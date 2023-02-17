@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using BookStore.Properties.Models;
 using System.Diagnostics;
+using BookStore.Models;
 
 namespace BookStore.Data
 {
@@ -15,17 +15,17 @@ namespace BookStore.Data
         {
         }
 
-        public DbSet<BookStore.Properties.Models.Role> Role { get; set; } = default!;
+        public DbSet<Role> Role { get; set; } = default!;
 
-        public DbSet<BookStore.Properties.Models.User> User { get; set; } = default!;
+        public DbSet<User> User { get; set; } = default!;
 
-        public DbSet<BookStore.Properties.Models.Booking> Booking { get; set; } = default!;
+        public DbSet<Booking> Booking { get; set; } = default!;
 
-        public DbSet<BookStore.Properties.Models.Product> Product { get; set; } = default!;
+        public DbSet<Product> Product { get; set; } = default!;
 
-        public DbSet<BookStore.Properties.Models.BookStoreItem> BookStore { get; set; } = default!;
+        public DbSet<BookStoreItem> BookStore { get; set; } = default!;
 
-        public DbSet<BookStore.Properties.Models.Status> Status { get; set; } = default!;
+        public DbSet<Status> Status { get; set; } = default!;
 
     }
 }

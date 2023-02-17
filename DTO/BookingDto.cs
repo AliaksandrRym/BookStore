@@ -1,4 +1,4 @@
-﻿using BookStore.Properties.Models;
+﻿using BookStore.Models;
 
 namespace BookStore.DTO
 {

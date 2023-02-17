@@ -4,7 +4,7 @@
     using BookStore.Controllers;
     using BookStore.DTO;
     using BookStore.Interfaces;
-    using BookStore.Properties.Models;
+    using BookStore.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
