@@ -19,6 +19,7 @@ builder.Services.AddDbContext<BookStoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreContext") ?? throw new InvalidOperationException("Connection string 'BookStoreContext' not found.")));
 
 // Add services to the container.
+builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUserService, UserService>(); 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IBookStoreService, BookStoreItemService>();
@@ -45,8 +46,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
