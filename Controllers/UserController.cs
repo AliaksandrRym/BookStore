@@ -1,138 +1,141 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BookStore.Data;
-using BookStore.Models;
-
-namespace BookStore.Controllers
+﻿namespace BookStore.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using BookStore.Models;
+    using AutoMapper;
+    using BookStore.Interfaces;
+    using BookStore.DTO;
+
     public class UserController : Controller
     {
-        private readonly BookStoreContext _context;
+        private readonly IUserService _userService;
 
-        public UserController(BookStoreContext context)
+        private readonly IMapper _mapper;
+
+        public UserController(IUserService userService, IMapper mapper)
         {
-            _context = context;
+            _userService = userService;
+            _mapper = mapper;
         }
 
         // GET: User
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string userName)
         {
-            var bookStoreContext = _context.User.Include(u => u.Role);
-            return View(await bookStoreContext.ToListAsync());
+            if (_userService.Get() == null)
+            {
+                return Problem("Users list is empty.");
+            }
+
+            var users = from u in _userService.Users()
+                           select u;
+
+            if (!String.IsNullOrEmpty(userName))
+            {
+                users = users.Where(u => u.Name!.Contains(userName));
+            }
+            return View(_mapper.Map<List<SecureUserDto>>(users.ToList()));
         }
 
         // GET: User/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _userService.Get(id) == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var product = _userService.Get(id);
 
-            return View(user);
+            return View(product);
         }
 
         // GET: User/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Role, "id", "id");
+            ViewData["RoleId"] = new SelectList(_userService.GetRoles(), "id", "id");
             return View();
         }
 
         // POST: User/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Adress,Email,Login,Password,RoleId")] User user)
+        public IActionResult Create([Bind("Id,Name,Adress,Email,Login,Password,RoleId")] UserDto user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                var userMap = _mapper.Map<User>(user);
+                if (!_userService.Post(userMap))
+                {
+                    ModelState.AddModelError("", "Something went wrong, user was not saved");
+                    return StatusCode(500, ModelState);
+                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "id", "id", user.RoleId);
+            ViewData["RoleId"] = new SelectList(_userService.GetRoles(), "id", "id", user.RoleId);
             return View(user);
         }
 
         // GET: User/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null || _context.User == null)
+            if (id == null || _userService.Get(id) == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
+            var user = _userService.Get(id);
             if (user == null)
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "id", "id", user.RoleId);
+            ViewData["RoleId"] = new SelectList(_userService.GetRoles(), "id", "id", user.RoleId);
             return View(user);
         }
 
         // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Adress,Email,Login,Password,RoleId")] User user)
+        public ActionResult Edit(int id, [Bind("Id,Name,Adress,Email,Login,Password,RoleId")] UserDto userUpdate)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if (userUpdate == null)
+                    return BadRequest(ModelState);
+
+                if (id != userUpdate.Id)
+                    return BadRequest(ModelState);
+
+                if (!_userService.Exists(id))
+                    return NotFound();
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var userMap = _mapper.Map<User>(userUpdate);
+
+                if (!_userService.Put(userMap))
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "Something went wrong while updating user");
+                    return StatusCode(500, ModelState);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "id", "id", user.RoleId);
-            return View(user);
+
+            ViewData["RoleId"] = new SelectList(_userService.GetRoles(), "id", "id", userUpdate.RoleId);
+            return View(userUpdate);
         }
 
         // GET: User/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null || _context.User == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user =_userService.Get(id);
             if (user == null)
             {
                 return NotFound();
@@ -144,25 +147,19 @@ namespace BookStore.Controllers
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if (_context.User == null)
-            {
-                return Problem("Entity set 'BookStoreContext.User'  is null.");
-            }
-            var user = await _context.User.FindAsync(id);
-            if (user != null)
-            {
-                _context.User.Remove(user);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            var userToDelete = _userService.Get(id);
 
-        private bool UserExists(int id)
-        {
-          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_userService.Delete(userToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting user");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

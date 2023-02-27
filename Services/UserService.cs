@@ -3,6 +3,8 @@
     using BookStore.Data;
     using BookStore.Interfaces;
     using BookStore.Models;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
 
     public class UserService : IUserService
     {
@@ -27,7 +29,7 @@
 
         public User Get(int id)
         {
-            var result = _dbContext.User.Where(u => u.Id == id).FirstOrDefault();
+            var result = _dbContext.User.Include(i => i.Role).Where(u => u.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -52,6 +54,17 @@
         {
             var saved = _dbContext.SaveChanges();
             return saved > 0 ? true: false;
+        }
+
+        public List<Role> GetRoles()
+        {
+            var result = _dbContext.Role.ToList();
+            return result;
+        }
+
+        public IQueryable<User> Users()
+        {
+            return _dbContext.User.Select(u => u);
         }
     }
 }

@@ -13,5 +13,9 @@
         bool Put(BookStoreItem model);
 
         bool Delete(BookStoreItem model);
+
+        public IQueryable<BookStoreItem> BookStoreItems();
+
+        public List<Product> Products();
     }
 }

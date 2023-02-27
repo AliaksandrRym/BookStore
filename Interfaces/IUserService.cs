@@ -1,4 +1,5 @@
 ﻿using BookStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Interfaces
 {
@@ -13,5 +14,9 @@ namespace BookStore.Interfaces
         bool Put(User model);
 
         bool Delete(User model);
+
+        List<Role> GetRoles();
+
+        public IQueryable<User> Users();
     }
 }

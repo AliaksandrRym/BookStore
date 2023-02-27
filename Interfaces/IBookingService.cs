@@ -1,4 +1,5 @@
 ﻿using BookStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Interfaces
 {
@@ -15,5 +16,15 @@ namespace BookStore.Interfaces
         bool Delete(Booking model);
 
         bool Save();
+
+        public IQueryable<Booking> Bookings();
+
+        public List<User> GetUsers();
+
+        public List<Product> GetProducts();
+
+        public List<Status> GetStatuses();
+
+        public Product GetProduct(int id);
     }   
 }

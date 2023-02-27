@@ -3,6 +3,7 @@
     using BookStore.Data;
     using BookStore.Interfaces;
     using BookStore.Models;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
 
     public class BookingService : IBookingService
@@ -26,13 +27,17 @@
 
         public List<Booking> Get()
         {
-            var result = _dbContext.Booking.ToList();
+            var result = _dbContext.Booking.Include(b => b.Product).Include(b => b.Status).Include(b => b.User).ToList();
             return result;
         }
 
         public Booking Get(int id)
         {
-            var result = _dbContext.Booking.Where(b => b.Id == id).FirstOrDefault();
+            var result =  _dbContext.Booking
+                .Include(b => b.Product)
+                .Include(b => b.Status)
+                .Include(b => b.User)
+                .Where(b => b.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -52,6 +57,35 @@
         {
             var saved = _dbContext.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public IQueryable<Booking> Bookings()
+        {
+            return _dbContext.Booking.Select(b => b);
+        }
+
+        public List<User> GetUsers()
+        {
+            var result = _dbContext.User.ToList();
+            return result;
+        }
+
+        public List<Product> GetProducts()
+        {
+            var result = _dbContext.Product.Include(p => p.Bookings).Include(p => p.BookStoreItems).ToList();
+            return result;
+        }
+
+        public Product GetProduct(int id)
+        {
+            var result = Get(id).Product;
+            return result;
+        }
+
+        public List<Status> GetStatuses()
+        {
+            var result = _dbContext.Status.Include(s => s.Bookings).ToList();
+            return result;
         }
     }
 }

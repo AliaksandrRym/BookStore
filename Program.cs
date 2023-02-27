@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using BookStore.Data;
 using BookStore.Interfaces;
 using BookStore.Services;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Hosting.WindowsServices;
 
 //var builder = WebApplication.CreateBuilder(args);
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -14,6 +12,9 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     WebRootPath = "wwwroot",
     Args = args
 });
+
+builder.WebHost.UseWebRoot("wwwroot"); builder.WebHost.UseStaticWebAssets();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<BookStoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreContext") ?? throw new InvalidOperationException("Connection string 'BookStoreContext' not found.")));
@@ -57,3 +58,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+public partial class Program { }

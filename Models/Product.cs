@@ -18,6 +18,12 @@
 
         public ICollection<Booking>? Bookings { get; set; }
 
-        public ICollection<BookStoreItem> BookStoreItems { get; set; }
+        public ICollection<BookStoreItem>? BookStoreItems { get; set; }
+
+        public Product()
+        {
+            Bookings = new List<Booking>();
+            BookStoreItems = new List<BookStoreItem>();
+        }
     }
 }

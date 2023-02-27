@@ -1,0 +1,67 @@
+﻿@model IEnumerable<BookStore.Models.Booking>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<form asp-controller="Booking" asp-action="Index" method="get">
+    <p>
+        Title: <input type="text" name="searchString" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+<h1>Bookings</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        @Html.DisplayNameFor(model => model.Product.Image_Path)
+                        <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">
+                    </div>
+                    <div class="panel-body">
+                        <div> <b>@Html.DisplayFor(model => item.User.Name) </b> </div>
+                        <div> <b>@Html.DisplayFor(model => item.Product.Name) </b> </div>
+                        <div> <b>@Html.DisplayFor(model => item.Product.Price) </b> </div>
+                        <div> <b>@Html.DisplayFor(model => item.Delivery_date.Date)</b></div>
+                        <div> <b>@Html.DisplayFor(model => item.Delivery_Time.TimeOfDay)</b> </div>
+                        <div> <b>@Html.DisplayFor(model => item.Delivery_Adress)</b> </div>
+                        <div> <b>@Html.DisplayFor(model => item.Status.Name)</b> </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form  asp-controller="Booking" asp-action="UpdateApprovedStatus" method="post">
+                                        <input type="hidden" value="@item.Id" name="id" />
+                                        <input  class="btn btn-success" type="submit" value="Approve" />
+                                </form>
+                            </div>
+                            <div class="col-md-4">
+                                <form asp-controller="Booking" asp-action="UpdateRejectStatus" method="post">
+                                        <input type="hidden" value="@item.Id" name="id" />
+                                        <input class="btn btn-danger" type="submit" value="Reject" />
+                                </form>
+                            </div>
+                            <div class="col-md-4">
+                                <form asp-controller="Booking" asp-action="UpdateCompleteStatus" method="post">
+                                        <input type="hidden" value="@item.Id" name="id" />
+                                        <input class="btn btn-info" type="submit" value="Complete" />
+                                </form>
+                              </div>
+                        </div>
+                        <div class="center-block">
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
