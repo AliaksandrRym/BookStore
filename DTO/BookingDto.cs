@@ -12,7 +12,7 @@ namespace BookStore.DTO
 
         public DateTime Delivery_Time { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         public int StatusId { get; set; }
 

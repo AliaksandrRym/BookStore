@@ -7,5 +7,10 @@
         public string Name { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
+
+        public Status() 
+        {
+            Bookings = new List<Booking>();
+        }
     }
 }

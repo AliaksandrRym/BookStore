@@ -3,13 +3,14 @@
     using BookStore.Data;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using OpenQA.Selenium;
+    using OpenQA.Selenium.Chrome;
 
     [TestClass]
     public class BaseIntegrationTestsClass
     {
         protected HttpClient _client;
 
-        private readonly BookStoreContext _dbContext;
         [TestInitialize] 
             public void Init() 
         {
@@ -18,8 +19,8 @@
         }
 
         [TestCleanup]
-        public void Cleanup() 
-        { 
+        public void Cleanup()
+        {
             _client.Dispose();
         }
     }

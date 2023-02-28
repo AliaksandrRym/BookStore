@@ -1,0 +1,56 @@
+﻿@model IEnumerable<BookStore.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form asp-controller="Product" asp-action="Index" method="get">
+    <p>
+        Title: <input type="text" name="productName" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+<h1>Book Shop Catalogue</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="container">
+    <div class="row">
+@foreach (var item in Model)
+{
+        <div class="col-sm-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">@Html.DisplayNameFor(model => model.Image_Path)
+                  <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+                <div class="panel-body">
+                        <div> <b>@Html.DisplayNameFor(model => model.Name) : </b> @Html.DisplayFor(modelItem => item.Name) </div>
+                        <div> <b>@Html.DisplayNameFor(model => model.Description) : </b> @Html.DisplayFor(modelItem => item.Description) </div>
+                        <div> <b>@Html.DisplayNameFor(model => model.Author) : </b> @Html.DisplayFor(modelItem => item.Author) </div>
+                        <div> <b>@Html.DisplayNameFor(model => model.Price) : </b> @Html.DisplayFor(modelItem => item.Price) </div>
+                </div>
+                   <div class="panel-footer">
+                    <button type="button" class="btn btn-default">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    </button>
+                    <button type="button" class="btn btn-info">
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </button>
+                    <button type="button" class="btn btn-success">
+                    <a asp-action="Create" asp-controller="Booking" asp-route-id="@item.Id">Book</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+}
+    </div>
+</div>
+
+
+
+

@@ -3,6 +3,7 @@
     using BookStore.Data;
     using BookStore.Interfaces;
     using BookStore.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class ProductService : IProductService
     {
@@ -25,13 +26,16 @@
 
         public List<Product> Get()
         {
-            var result = _dbContext.Product.ToList();
+            var result = _dbContext.Product.Include(p => p.Bookings).Include(p => p.BookStoreItems).ToList();
             return result;
         }
 
         public Product Get(int id)
         {
-            var result = _dbContext.Product.Where(p => p.Id == id).FirstOrDefault();
+            var result = _dbContext.Product
+                .Include(p => p.BookStoreItems)
+                .Include(p => p.Bookings)
+                .Where(p => p.Id == id).FirstOrDefault();
             return result;
         }
 
@@ -51,6 +55,11 @@
         {
             var saved = _dbContext.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public IQueryable<Product> Products()
+        {
+            return _dbContext.Product.Select(p => p);
         }
     }
 }

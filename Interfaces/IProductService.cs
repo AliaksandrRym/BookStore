@@ -13,5 +13,7 @@ namespace BookStore.Interfaces
         bool Put(Product model);
 
         bool Delete(Product model);
+
+        public IQueryable<Product> Products();
     }
 }
