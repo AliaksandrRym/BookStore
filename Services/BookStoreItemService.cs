@@ -55,12 +55,17 @@
         }
         public IQueryable<BookStoreItem> BookStoreItems()
         {
-            return _dbContext.BookStore.Select(s => s);
+            return _dbContext.BookStore;
         }
 
         public List<Product> Products()
         {
             return _dbContext.Product.Include(p => p.BookStoreItems).Include(p => p.Bookings).ToList();
+        }
+
+        public IQueryable<Product> ProductAsIQ()
+        {
+            return _dbContext.Product;
         }
     }
 }

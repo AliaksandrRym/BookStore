@@ -17,5 +17,7 @@
         public IQueryable<BookStoreItem> BookStoreItems();
 
         public List<Product> Products();
+
+        public IQueryable<Product> ProductAsIQ();
     }
 }

@@ -1,14 +1,13 @@
-﻿using System;
-namespace BookStore.Controllers
+﻿namespace BookStore.Controllers
 {
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BookStore.Models;
 using AutoMapper;
 using BookStore.Interfaces;
 using BookStore.DTO;
-    using BookStore.Services;
-    using BookStore.Enums;
+using BookStore.Enums;
 
     public class BookStoreItemController : Controller
     {
@@ -65,17 +64,17 @@ using BookStore.DTO;
         [ValidateAntiForgeryToken]
         public IActionResult Create(string Product, [Bind("Available,Booked,Sold")] BookStoreItemDto bookStoreItem)
         {
-            var bookedCount = _bookStoreService.Products()
-                .Where(b => b.Name == Product)
-                .FirstOrDefault().Bookings
-                .Where(s => s.StatusId == (int)Statuses.APPROVED || s.StatusId == (int)Statuses.SUBMITED).Count();
+            var bookings = _bookStoreService.ProductAsIQ()
+                 .Where(b => b.Name == Product)
+                 .SelectMany(b => b.Bookings)
+                 .Where(i => i.StatusId == (int)Statuses.APPROVED ||
+                 i.StatusId == (int)Statuses.SUBMITED
+                 || i.StatusId == (int)Statuses.COMPLETED);
 
-            var soldCount = _bookStoreService.Products()
-                .Where(b => b.Name == Product)
-                .FirstOrDefault().Bookings
-                .Where(s => s.StatusId == (int)Statuses.COMPLETED).Count();
+            var bookedCount = bookings.Where(s => s.StatusId == (int)Statuses.APPROVED).Count();
+            var soldCount = bookings.Where(s => s.StatusId == (int)Statuses.COMPLETED).Count();
 
-            bookStoreItem.ProductId = _bookStoreService.Products().Where(p => p.Name == Product).FirstOrDefault().Id;
+            bookStoreItem.ProductId = _bookStoreService.ProductAsIQ().Where(p => p.Name == Product).FirstOrDefault().Id;
             bookStoreItem.Booked = bookedCount;
             bookStoreItem.Sold = soldCount;
             bookStoreItem.Available = bookStoreItem.Available - (bookStoreItem.Booked + bookStoreItem.Sold);
@@ -121,20 +120,9 @@ using BookStore.DTO;
         public IActionResult Edit(int id, [Bind("Id,Available,Booked,Sold,ProductId")] BookStoreItemDto bookStoreItemUpdate)
         {
             bookStoreItemUpdate.Available = bookStoreItemUpdate.Available - (bookStoreItemUpdate.Booked + bookStoreItemUpdate.Sold);
-            if (ModelState.IsValid)
+
+            if (ValidateBookStoreItem(id, bookStoreItemUpdate))
             {
-                if (bookStoreItemUpdate == null)
-                    return BadRequest(ModelState);
-
-                if (id != bookStoreItemUpdate.Id)
-                    return BadRequest(ModelState);
-
-                if (!_bookStoreService.Exists(id))
-                    return NotFound();
-
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
                 var itemMap = _mapper.Map<BookStoreItem>(bookStoreItemUpdate);
 
                 if (!_bookStoreService.Put(itemMap))
@@ -148,6 +136,17 @@ using BookStore.DTO;
             ViewData["ProductId"] = bookStoreItem.Product.Id;
             ViewData["ProductName"] = bookStoreItem.Product.Name;
             return View(bookStoreItem);
+        }
+
+        protected bool ValidateBookStoreItem(int id, BookStoreItemDto bookStoreItemUpdate)
+        {
+            if (id != bookStoreItemUpdate.Id)
+                ModelState.AddModelError("Id", "Id does not correspond item id.");
+            if (bookStoreItemUpdate == null)
+                ModelState.AddModelError("BookStoreItem", "BookStoreItem is null.");
+            if (!_bookStoreService.Exists(id))
+                ModelState.AddModelError("Bookstore Item is not found", "There is no such bookstore item.");
+            return ModelState.IsValid;
         }
 
         // GET: BookStoreItem/Delete/5
