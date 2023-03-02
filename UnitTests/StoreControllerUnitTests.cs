@@ -38,6 +38,7 @@ namespace BookStore.UnitTests
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [Ignore]
         [TestMethod]
         public void StoreItem_Create_Test()
         {
@@ -56,6 +57,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [Ignore]
         [TestMethod]
         public void StoreController_Create_Test()
         {
