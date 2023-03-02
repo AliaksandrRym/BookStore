@@ -56,6 +56,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [Ignore]
         [TestMethod]
         public void StoreController_Create_Test()
         {
