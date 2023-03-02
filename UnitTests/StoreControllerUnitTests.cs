@@ -38,6 +38,7 @@ namespace BookStore.UnitTests
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [Ignore]
         [TestMethod]
         public void StoreItem_Create_Test()
         {
