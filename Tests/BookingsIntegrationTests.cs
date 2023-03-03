@@ -9,7 +9,7 @@
     [TestClass]
     public class BookingsIntegrationTests: BaseIntegrationTestsClass
     {
-        [Ignore]
+        [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_Bookings_Integration_Return_Ok()
         {
@@ -19,7 +19,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Bookings is not {HttpStatusCode.OK}");
         }
 
-        [Ignore]
+        [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_Booking_ById_Integration_Test()
         {
