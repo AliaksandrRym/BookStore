@@ -10,7 +10,7 @@
     public class BookingsIntegrationTests: BaseIntegrationTestsClass
     {
         [TestMethod]
-        public async Task Get_Bookings_Return_Ok()
+        public async Task Get_Bookings_Integration_Return_Ok()
         {
             var response = await _client.GetAsync(Endpoints.Bookings);
             var bookings = await _client.GetFromJsonAsync<List<Booking>>(Endpoints.Bookings);
@@ -20,7 +20,7 @@
 
 
         [TestMethod]
-        public async Task Get_Booking_ById_Test()
+        public async Task Get_Booking_ById_Integration_Test()
         {
             var bookings = await _client.GetFromJsonAsync<List<Booking>>(Endpoints.Bookings);
             var bookingFromList = bookings.First();
