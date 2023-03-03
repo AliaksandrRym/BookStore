@@ -20,6 +20,7 @@
             _userServiceMock = new Mock<IUserService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Index_SearchIsEmpty_Test()
         {
@@ -36,6 +37,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);          
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Index_WithSerachParam_Test()
         {
@@ -54,6 +56,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Details_Test()
         {
@@ -73,6 +76,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Create_Test()
         {
@@ -90,6 +94,7 @@
             Assert.AreEqual(createdUser.Adress, user.Adress);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Create_RedirectToActionResult_Test()
         {
@@ -139,6 +144,7 @@
             Assert.AreEqual(updUser.Name, updUserName);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void UserController_Delete_Test()
         {

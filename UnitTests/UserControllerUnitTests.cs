@@ -22,6 +22,7 @@ namespace BookStore.UnitTests
             _userServiceMock = new Mock<IUserService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_Users_Return_Ok()
         {
@@ -35,7 +36,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(200, obj.StatusCode);
         }
 
-
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_User_ById_Return_Ok()
         {
@@ -52,6 +53,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(200, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Post_User_Return_Ok()
         {
@@ -66,6 +68,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(201, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Put_User_Return_Ok()
         {
@@ -82,6 +85,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(204, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Delete_User_Return_Ok()
         {

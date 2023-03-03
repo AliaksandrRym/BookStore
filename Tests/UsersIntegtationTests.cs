@@ -33,7 +33,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Users/{userFromList.Id} is not {HttpStatusCode.OK}");
         }
 
-        [Ignore]
+        //[Ignore]
         [TestMethod]
         public async Task Post_Delete_User_Test()
         {
