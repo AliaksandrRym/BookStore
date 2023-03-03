@@ -10,6 +10,7 @@
     [TestClass]
     public class BookStoreITemIntegrationTests: BaseIntegrationTestsClass
     {
+        [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_BookStoreItems_Return_Ok()
         {
@@ -19,7 +20,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET {Endpoints.BookStoreItems} is not {HttpStatusCode.OK}");
         }
 
-        [Ignore]
+        [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_BookStoreItem_ById_Test()
         {
