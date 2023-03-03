@@ -20,6 +20,7 @@
             _bookStoreServiceMock = new Mock<IBookStoreService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_BookstoreItems_Return_Ok()
         {
@@ -33,6 +34,7 @@
             Assert.AreEqual(200, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_BookStoreItem_ById_Return_Ok()
         {
@@ -49,6 +51,7 @@
             Assert.AreEqual(200, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Post_BookStoreItem_Return_Ok()
         {
@@ -63,6 +66,7 @@
             Assert.AreEqual(201, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Put_BookStoreItem_Return_Ok()
         {
@@ -78,6 +82,7 @@
             Assert.AreEqual(204, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Delete_BookStoreItem_Return_Ok()
         {

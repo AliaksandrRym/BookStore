@@ -20,6 +20,7 @@
             _bookingServiceMock = new Mock<IBookingService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Index_SearchIsEmpty_Test()
         {
@@ -36,6 +37,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Index_WithSerachParam_Test()
         {
@@ -54,6 +56,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Booking_Details_Test()
         {
@@ -73,6 +76,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Create_Test()
         {
@@ -101,6 +105,7 @@
             Assert.AreEqual(createdBooking.StatusId, 1);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Create_RedirectToActionResult_Test()
         {
@@ -122,6 +127,7 @@
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Edit_RedirectToActionResult_Test()
         {
@@ -138,6 +144,7 @@
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Booking_Controller_Edit_Test()
         {
@@ -158,6 +165,7 @@
             Assert.AreEqual(updBooking.Delivery_Adress, updBookingAddress);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void BookingController_Delete_Test()
         {

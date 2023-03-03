@@ -22,6 +22,7 @@ namespace BookStore.UnitTests
             _storeServiceMock = new Mock<IBookStoreService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void StoreController_Index_SearchIsEmpty_Test()
         {
@@ -57,6 +58,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [TestCategory("UnitTest")]
         [Ignore]
         [TestMethod]
         public void StoreController_Create_Test()
@@ -82,6 +84,7 @@ namespace BookStore.UnitTests
             Assert.AreEqual(obj.ActionName, "Index");
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void StoreController_Delete_Test()
         {

@@ -20,6 +20,7 @@
             _productServiceMock = new Mock<IProductService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void ProductController_Index_SearchIsEmpty_Test()
         {
@@ -36,6 +37,7 @@
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void ProductController_Create_Test()
         {
@@ -53,6 +55,7 @@
             Assert.AreEqual(createdProduct.Description, product.Description);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void ProductController_Edit_Test()
         {
@@ -73,6 +76,7 @@
             Assert.AreEqual(updProduct.Name, updProductName);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void ProductController_Delete_Test()
         {

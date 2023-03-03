@@ -20,6 +20,7 @@
             _productServiceMock = new Mock<IProductService>();
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_Products_Return_Ok()
         {
@@ -34,6 +35,7 @@
             Assert.AreEqual(200, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Get_Product_ById_Return_Ok()
         {
@@ -50,6 +52,7 @@
             Assert.AreEqual(200, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Post_Product_Return_Ok()
         {
@@ -64,6 +67,7 @@
             Assert.AreEqual(201, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Put_Product_Return_Ok()
         {
@@ -80,6 +84,7 @@
             Assert.AreEqual(204, obj.StatusCode);
         }
 
+        [TestCategory("UnitTest")]
         [TestMethod]
         public void Delete_Product_Return_Ok()
         {
