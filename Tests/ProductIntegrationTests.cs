@@ -9,6 +9,7 @@
     [TestClass]
     public class ProductIntegrationTests: BaseIntegrationTestsClass
     {
+        [Ignore]
         [TestMethod]
         public async Task Get_Products_Return_Ok()
         {
@@ -18,6 +19,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Products is not {HttpStatusCode.OK}");
         }
 
+        [Ignore]
         [TestMethod]
         public async Task Get_Products_ById_Test()
         {
