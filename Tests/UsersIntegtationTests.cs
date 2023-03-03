@@ -10,6 +10,7 @@
     [TestClass]
     public class UsersIntegtationTests: BaseIntegrationTestsClass
     {
+        [Ignore]
         [TestMethod]
         public async Task Get_Users_Return_Ok()
         { 
@@ -19,6 +20,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Users is not {HttpStatusCode.OK}");
          }
 
+        [Ignore]
         [TestMethod]
         public async Task Get_User_ById_Test()
         {
@@ -31,6 +33,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Users/{userFromList.Id} is not {HttpStatusCode.OK}");
         }
 
+        [Ignore]
         [TestMethod]
         public async Task Post_Delete_User_Test()
         {

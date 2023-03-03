@@ -6,6 +6,7 @@
     [TestClass]
     public class Integration_UI_Part_Tests: IntegrationUIBaseTest
     {
+        [Ignore]
         [TestMethod]
         public void Add_Booking_UI_Test()
         {

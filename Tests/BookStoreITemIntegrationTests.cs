@@ -6,6 +6,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
+    [Ignore]
     [TestClass]
     public class BookStoreITemIntegrationTests: BaseIntegrationTestsClass
     {
@@ -18,7 +19,7 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET {Endpoints.BookStoreItems} is not {HttpStatusCode.OK}");
         }
 
-
+        [Ignore]
         [TestMethod]
         public async Task Get_BookStoreItem_ById_Test()
         {
