@@ -3,13 +3,16 @@
     using BookStore.Constants;
     using BookStore.DTO;
     using BookStore.Models;
+    using BookStore.Tests.Helpers;
     using BookStore.Tests.TestData;
+    using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
     [TestClass]
     public class UsersIntegtationTests: BaseIntegrationTestsClass
     {
+
         [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_Users_Return_Ok()

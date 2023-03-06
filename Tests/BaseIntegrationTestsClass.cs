@@ -1,27 +1,30 @@
 ﻿namespace BookStore.Tests
 {
-    using BookStore.Data;
+    using BookStore.Tests.Helpers;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using OpenQA.Selenium;
-    using OpenQA.Selenium.Chrome;
 
     [TestClass]
     public class BaseIntegrationTestsClass
     {
-        protected HttpClient _client;
+        protected static CustomWebApplicationFactory<Program> _factory;
+        protected static HttpClient _client;
 
-        [TestInitialize] 
-            public void Init() 
+        [AssemblyInitialize]
+        public static void AssemblyInitialize(TestContext context)
         {
-            var factory = new WebApplicationFactory<Program>();
-            _client = factory.CreateDefaultClient();
-        }
+            if (_factory == null)
+            {
+              _factory = new CustomWebApplicationFactory<Program>();
+            }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            _client.Dispose();
+            if (_client == null)
+            {
+                _client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+                {
+                    AllowAutoRedirect = true
+                });
+            }
         }
     }
 }
