@@ -2,15 +2,15 @@
 {
     using BookStore.Constants;
     using BookStore.Models;
-    using BookStore.Tests.TestData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
     [TestClass]
-    public class BookingsIntegrationTests: BaseIntegrationTestsClass
+    public class BookingsIntegrationTests : BaseIntegrationTestsClass
     {
-        [TestCategory("Integration")]
+
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task Get_Bookings_Integration_Return_Ok()
         {
             var response = await _client.GetAsync(Endpoints.Bookings);
@@ -19,8 +19,8 @@
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Bookings is not {HttpStatusCode.OK}");
         }
 
-        [TestCategory("Integration")]
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task Get_Booking_ById_Integration_Test()
         {
             var bookings = await _client.GetFromJsonAsync<List<Booking>>(Endpoints.Bookings);
@@ -31,6 +31,5 @@
             Assert.AreEqual(bookingFromList.Delivery_Adress, booking.Delivery_Adress);
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"Status code for GET api/Bookings/{bookingFromList.Id} is not {HttpStatusCode.OK}");
         }
-
     }
 }

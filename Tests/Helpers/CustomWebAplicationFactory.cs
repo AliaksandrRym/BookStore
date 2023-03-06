@@ -1,17 +1,51 @@
 ﻿namespace BookStore.Tests.Helpers
 {
+    using BookStore.Data;
     using Microsoft.AspNetCore.Mvc.Testing;
-    public class CustomWebAplicationFactory : WebApplicationFactory<Program>
-    {
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Data.Sqlite;
+    using Microsoft.EntityFrameworkCore;
+    using System.Data.Common;
 
-            public CustomWebAplicationFactory()
-            {
-            }
+    public class  CustomWebApplicationFactory<TProgram>
+    : WebApplicationFactory<TProgram> where TProgram : class
+    {
 
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
-                builder.UseUrls("https://localhost:7137");
-            }
+            builder.ConfigureServices(services =>
+            {
+                var dbContextDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(DbContextOptions<BookStoreContext>));
+
+                services.Remove(dbContextDescriptor);
+
+                var dbConnectionDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(DbConnection));
+
+                services.Remove(dbConnectionDescriptor);
+
+                // Create open SqliteConnection so EF won't automatically close it.
+                services.AddSingleton<DbConnection>(container =>
+                {
+                    var connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BookStoreContext-d3b21a9b-f8d3-4177-bae0-7a5f37ff5839;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                    connection.Open();
+
+                    return connection;
+                });
+
+                services.AddDbContext<BookStoreContext>((container, options) =>
+                {
+                    var connection = container.GetRequiredService<DbConnection>();
+                    options.UseSqlServer(connection);
+                });
+            });
+
+            builder.UseEnvironment("Development");
+            builder.UseUrls("https://localhost:7137");
+        }
 
             protected override IHost CreateHost(IHostBuilder builder)
             {

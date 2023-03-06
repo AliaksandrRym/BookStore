@@ -8,6 +8,7 @@
     [TestClass]
     public class BookStoreITemIntegrationTests: BaseIntegrationTestsClass
     {
+
         [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_BookStoreItems_Return_Ok()

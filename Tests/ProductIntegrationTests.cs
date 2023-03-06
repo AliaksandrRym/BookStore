@@ -2,13 +2,16 @@
 {
     using BookStore.Constants;
     using BookStore.Models;
+    using BookStore.Tests.Helpers;
     using BookStore.Tests.TestData;
+    using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
     [TestClass]
     public class ProductIntegrationTests: BaseIntegrationTestsClass
     {
+
         [TestCategory("Integration")]
         [TestMethod]
         public async Task Get_Products_Return_Ok()
