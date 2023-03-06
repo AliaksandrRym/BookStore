@@ -2,11 +2,9 @@
 {
     using BookStore.Constants;
     using BookStore.Models;
-    using BookStore.Tests.TestData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
-    //[Ignore]
     [TestClass]
     public class BookStoreITemIntegrationTests: BaseIntegrationTestsClass
     {
