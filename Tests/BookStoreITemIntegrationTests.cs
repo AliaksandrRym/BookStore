@@ -6,7 +6,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
 
-    [Ignore]
+    //[Ignore]
     [TestClass]
     public class BookStoreITemIntegrationTests: BaseIntegrationTestsClass
     {
