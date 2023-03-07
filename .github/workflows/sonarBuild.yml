@@ -53,7 +53,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"AliaksandrRym_BookStore" /o:"aliaksandrrym" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html"
-          dotnet test --no-build --verbosity normal --filter TestCategory=UnitTest
+          dotnet test --filter TestCategory=UnitTest
           dotnet dotcover test --dcReportType=HTML
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           
