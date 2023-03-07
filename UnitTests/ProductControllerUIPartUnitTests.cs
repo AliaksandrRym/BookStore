@@ -33,7 +33,7 @@
             var obj = result as ViewResult;
             var products = obj.Model as List<Product>;
 
-            Assert.AreEqual(3, products.Count());
+            Assert.AreEqual(3, products.Count);
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
