@@ -52,7 +52,7 @@
             var obj = result as ViewResult;
             var bookings = obj.Model as List<Booking>;
 
-            Assert.AreEqual(1, bookings.Count());
+            Assert.AreEqual(1, bookings.Count);
             Assert.IsTrue(bookings.TrueForAll(b => b.Product.Name.Contains(search)));
             Assert.IsInstanceOfType<ViewResult>(result);
         }
