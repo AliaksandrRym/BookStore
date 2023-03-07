@@ -33,7 +33,7 @@
             var obj = result as ViewResult;
             var products = obj.Model as List<Product>;
 
-            Assert.AreEqual(products.Count(), 3);
+            Assert.AreEqual(3, products.Count());
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
@@ -89,7 +89,7 @@
             var result = _productController.DeleteConfirmed(id);
             var obj = result as RedirectToActionResult;
 
-            Assert.AreEqual(obj.ActionName, "Index");
+            Assert.AreEqual("Index", obj.ActionName);
         }
     }
 }

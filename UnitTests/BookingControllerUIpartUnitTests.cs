@@ -8,6 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using BookStore.Models;
+    using BookStore.Enums;
 
     [TestClass]
     public class BookingControllerUIpartUnitTests : BaseTests
@@ -33,7 +34,7 @@
             var obj = result as ViewResult;
             var bookings = obj.Model as List<Booking>;
 
-            Assert.AreEqual(bookings.Count(), 3);
+            Assert.AreEqual(3, bookings.Count());
             Assert.IsInstanceOfType<ViewResult>(result);
         }
 
@@ -51,7 +52,7 @@
             var obj = result as ViewResult;
             var bookings = obj.Model as List<Booking>;
 
-            Assert.AreEqual(bookings.Count(), 1);
+            Assert.AreEqual(1, bookings.Count());
             Assert.IsTrue(bookings.TrueForAll(b => b.Product.Name.Contains(search)));
             Assert.IsInstanceOfType<ViewResult>(result);
         }
@@ -102,7 +103,7 @@
             Assert.AreEqual(createdBooking.Delivery_Adress, booking.Delivery_Adress);
             Assert.AreEqual(createdBooking.Delivery_Time, booking.Delivery_Time);
             Assert.AreEqual(createdBooking.Delivery_date, booking.Delivery_date);
-            Assert.AreEqual(createdBooking.StatusId, 1);
+            Assert.AreEqual((int)Statuses.SUBMITED, createdBooking.StatusId);
         }
 
         [TestCategory("UnitTest")]
