@@ -124,7 +124,7 @@
             var result = _bookingController.Create(product.Name, _mapper.Map<BookingDto>(booking));
             var obj = result as RedirectToActionResult;
 
-            Assert.AreEqual(obj.ActionName, "Index");
+            Assert.AreEqual("Index", obj.ActionName);
         }
 
         [TestCategory("UnitTest")]
@@ -141,7 +141,7 @@
             var result = _bookingController.Edit(bookingId, updBooking);
             var obj = result as RedirectToActionResult;
 
-            Assert.AreEqual(obj.ActionName, "Index");
+            Assert.AreEqual("Index", obj.ActionName);
         }
 
         [TestCategory("UnitTest")]
@@ -178,7 +178,7 @@
             var result = _bookingController.DeleteConfirmed(id);
             var obj = result as RedirectToActionResult;
 
-            Assert.AreEqual(obj.ActionName, "Index");
+            Assert.AreEqual("Index", obj.ActionName);
         }
     }
 }
