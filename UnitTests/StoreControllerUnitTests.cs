@@ -55,7 +55,7 @@ namespace BookStore.UnitTests
             var result = _storeController.Create(product.Name, _mapper.Map<BookStoreItemDto>(item));
             var obj = result as RedirectToActionResult;
 
-            Assert.AreEqual(obj.ActionName, "Index");
+            Assert.AreEqual("Index", obj.ActionName);
         }
 
         [TestCategory("UnitTest")]
