@@ -27,11 +27,11 @@
 
                 services.Remove(dbConnectionDescriptor);
 
-                // Create open SqliteConnection so EF won't automatically close it.
                 services.AddSingleton<DbConnection>(container =>
                 {
-                    var connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;user ID=DESKTOP-D64SJFJ\anduser;Initial Catalog=BookStoreContext-d3b21a9b-f8d3-4177-bae0-7a5f37ff5839;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
+                    //var connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;user ID=DESKTOP-D64SJFJ\anduser;Initial Catalog=BookStoreContext-d3b21a9b-f8d3-4177-bae0-7a5f37ff5839;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                    var connection = new SqlConnection(@"Data Source=DESKTOP-D64SJFJ\SQLEXPRESS;user ID=DESKTOP-D64SJFJ\anduser;Initial Catalog=BookStore;User Id = TestAdmin; Password = Test;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                    //Data Source=DESKTOP-D64SJFJ\SQLEXPRESS;Initial Catalog=BookStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
                     connection.Open();
 
                     return connection;
