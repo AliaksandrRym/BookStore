@@ -6,7 +6,7 @@
     [TestClass]
     public class Integration_UI_Part_Tests: IntegrationUIBaseTest
     {
-        [TestCategory("Integration")]
+        [TestCategory("IntegrationUI")]
         [TestMethod]
         public void Add_Booking_UI_Test()
         {
