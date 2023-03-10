@@ -49,10 +49,8 @@
 
             protected override IHost CreateHost(IHostBuilder builder)
             {
-                // need to create a plain host that we can return.
                 var dummyHost = builder.Build();
 
-                // configure and start the actual host.
                 builder.ConfigureWebHost(webHostBuilder => webHostBuilder.UseKestrel());
 
                 var host = builder.Build();
