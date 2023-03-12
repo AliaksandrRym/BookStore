@@ -24,7 +24,7 @@
 
         [TestCategory("Integration")]
         [TestMethod]
-        public async Task Get_Products_ById_Test(string string)
+        public async Task Get_Products_ById_Test()
         {
             var products = await _client.GetFromJsonAsync<List<Product>>(Endpoints.Products);
             var productFromList = products.First();
