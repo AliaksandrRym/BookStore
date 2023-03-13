@@ -93,7 +93,7 @@ using BookStore.Enums;
             return View(bookStoreItem);
         }
 
-        // GET: BookStoreItem/Edit/5
+    
         public IActionResult Edit(int id)
         {
             if (id == null || _bookStoreService.Get(id) == null)
