@@ -114,7 +114,6 @@ using BookStore.Enums;
             return View(bookStoreItem);
         }
 
-        // POST: BookStoreItem/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,Available,Booked,Sold,ProductId")] BookStoreItemDto bookStoreItemUpdate)
