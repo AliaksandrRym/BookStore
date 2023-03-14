@@ -42,17 +42,16 @@ jobs:
         if: success() || failure()
         with:
          name: QualityGate Unit Tests
-          path: BookStore/TestResults/test-results.trx
-          reporter: dotnet-trx
-          fail-on-error: true           
+         path: BookStore/TestResults/test-results.trx
+         reporter: dotnet-trx
+         fail-on-error: true           
       - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: BookStore/opencover.xml
-        verbose: true
-        fail_ci_if_error: true
-        codecov_curl_args: '-g'                                            
+        uses: codecov/codecov-action@v1
+        with:
+         files: BookStore/opencover.xml
+         verbose: true
+         fail_ci_if_error: true
+         codecov_curl_args: '-g'                                            
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
