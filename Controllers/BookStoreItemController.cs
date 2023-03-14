@@ -39,7 +39,6 @@ using BookStore.Enums;
             return View(stores.ToList());
         }
 
-        // GET: BookStoreItem/Details/5
         public async Task<IActionResult> Details(int id)
         {
             if (id == null || _bookStoreService.Get(id) == null)
