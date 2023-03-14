@@ -59,7 +59,6 @@ using BookStore.Enums;
             return View();
         }
 
-        // POST: BookStoreItem/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(string Product, [Bind("Available,Booked,Sold")] BookStoreItemDto bookStoreItem)
