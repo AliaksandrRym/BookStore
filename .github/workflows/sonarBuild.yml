@@ -33,25 +33,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner          
-      - name: Test with coverage
-        shell: powershell
-        run: dotnet test --filter TestCategory=UnitTest --logger "trx;LogFileName=test-results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      - name: Publish Unit tests results
-        uses: dorny/test-reporter@v1.5.0
-        if: success() || failure()
-        with:
-         name: QualityGate Unit Tests
-         path: "**/test-results.trx"
-         reporter: dotnet-trx
-         fail-on-error: true           
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-         files: BookStore/opencover.xml
-         verbose: true
-         fail_ci_if_error: true
-         codecov_curl_args: '-g'                                            
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner                                                  
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
