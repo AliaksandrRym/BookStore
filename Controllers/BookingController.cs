@@ -135,7 +135,6 @@ using BookStore.Enums;
             return View(booking);
         }
 
-        // POST: Booking/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UpdateApprovedStatus(string id)
