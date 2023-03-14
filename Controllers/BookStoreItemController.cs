@@ -52,7 +52,6 @@ using BookStore.Enums;
             return View(bookStoreItem);
         }
 
-        // GET: BookStoreItem/Create
         public IActionResult Create()
         {
             ViewData["Name"] = new SelectList(_bookStoreService.Products(), "Name", "Name");
