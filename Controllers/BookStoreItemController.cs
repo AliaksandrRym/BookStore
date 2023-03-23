@@ -36,6 +36,16 @@ using BookStore.Enums;
             {
                 stores = stores.Where(s => s.Product.Name!.Contains(searchString));
             }
+
+            var items = _bookStoreService.BookStoreItems().Select(item => item).ToList();
+            foreach(var item in items)
+            {
+               var bookings = _bookStoreService.ProductAsIQ().Where(x => x.Id == item.ProductId).Select(x => x.Bookings).ToList();
+               var bookedCount =  bookings.SelectMany(x => x).Where(x => x.StatusId == (int)Statuses.SUBMITED || x.StatusId == (int)Statuses.APPROVED).Count();
+               var closedCount = bookings.SelectMany(x => x).Where(x => x.StatusId == (int)Statuses.COMPLETED).Count();
+               item.Booked = bookedCount;
+               item.Sold = closedCount;
+            }
             return View(stores.ToList());
         }
 
